@@ -18,6 +18,8 @@ cameron *at* udacity *dot* com
 
 // As you may have realized, this website randomly generates pizzas.
 // Here are arrays of all possible pizza ingredients.
+/*var pizzaCols = -1;
+var numPizzas = -1;*/
 var pizzaIngredients = {};
 pizzaIngredients.meats = [
   "Pepperoni",
@@ -450,9 +452,12 @@ var resizePizzas = function(size) {
 
   // Iterates through pizza elements on the page and changes their widths
   function changePizzaSizes(size) {
+	if (document.querySelectorAll(".randomPizzaContainer").length <= 0) return;
+	var dx = determineDx(document.querySelectorAll(".randomPizzaContainer")[0], size);
+    var newwidth = (document.querySelectorAll(".randomPizzaContainer")[0].offsetWidth + dx) + 'px';
     for (var i = 0; i < document.querySelectorAll(".randomPizzaContainer").length; i++) {
-      var dx = determineDx(document.querySelectorAll(".randomPizzaContainer")[i], size);
-      var newwidth = (document.querySelectorAll(".randomPizzaContainer")[i].offsetWidth + dx) + 'px';
+      //var dx = determineDx(document.querySelectorAll(".randomPizzaContainer")[i], size);
+      //var newwidth = (document.querySelectorAll(".randomPizzaContainer")[i].offsetWidth + dx) + 'px';
       document.querySelectorAll(".randomPizzaContainer")[i].style.width = newwidth;
     }
   }
@@ -504,7 +509,9 @@ function updatePositions() {
 
   var items = document.querySelectorAll('.mover');
   for (var i = 0; i < items.length; i++) {
-    var phase = Math.sin((document.body.scrollTop / 1250) + (i % 5));
+	  var coords = items[i].getBoundingClientRect();
+	  if (coords.top > 900 ){ break;}
+	var phase = Math.sin((document.body.scrollTop / 1250) + (i % 5));
     items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
   }
 
@@ -522,10 +529,14 @@ function updatePositions() {
 window.addEventListener('scroll', updatePositions);
 
 // Generates the sliding pizzas when the page loads.
-document.addEventListener('DOMContentLoaded', function() {
-  var cols = 8;
+document.addEventListener('DOMContentLoaded', generateSlidingPizzas);
+
+function generateSlidingPizzas() {
+  var cols = Math.floor(screen.width/256);
+  var rows = Math.floor(screen.height/256)+1;
   var s = 256;
-  for (var i = 0; i < 200; i++) {
+  console.log("finna make "+(rows*cols)+" pizzas");
+  for (var i = 0; i < rows*cols; i++) {
     var elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
@@ -536,4 +547,4 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelector("#movingPizzas1").appendChild(elem);
   }
   updatePositions();
-});
+}
