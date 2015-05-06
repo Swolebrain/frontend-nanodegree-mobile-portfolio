@@ -452,7 +452,10 @@ var resizePizzas = function(size) {
 
   // Iterates through pizza elements on the page and changes their widths
   function changePizzaSizes(size) {
+	//just error-proofing the function
 	if (document.querySelectorAll(".randomPizzaContainer").length <= 0) return;
+	//moved the newwidth computation out here since there's no need to call those convoluted functions more 
+	//than once - their output is the same regardless of which actual dom element the new size is being applied to
 	var dx = determineDx(document.querySelectorAll(".randomPizzaContainer")[0], size);
     var newwidth = (document.querySelectorAll(".randomPizzaContainer")[0].offsetWidth + dx) + 'px';
     for (var i = 0; i < document.querySelectorAll(".randomPizzaContainer").length; i++) {
@@ -509,8 +512,6 @@ function updatePositions() {
 
   var items = document.querySelectorAll('.mover');
   for (var i = 0; i < items.length; i++) {
-	  var coords = items[i].getBoundingClientRect();
-	  if (coords.top > 900 ){ break;}
 	var phase = Math.sin((document.body.scrollTop / 1250) + (i % 5));
     items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
   }
@@ -532,10 +533,13 @@ window.addEventListener('scroll', updatePositions);
 document.addEventListener('DOMContentLoaded', generateSlidingPizzas);
 
 function generateSlidingPizzas() {
-  var cols = Math.floor(screen.width/256);
-  var rows = Math.floor(screen.height/256)+1;
+  //computing number of pizza rows and columns based on width of screen
+  //Using width of screen rather than window so that expensive pizza recomputation 
+  //and dom element creation doesnt have to happen on window resize
   var s = 256;
-  console.log("finna make "+(rows*cols)+" pizzas");
+  var cols = Math.floor(screen.width/s);
+  //rows has 1 added to it just to be safe
+  var rows = Math.floor(screen.height/s) + 1; 
   for (var i = 0; i < rows*cols; i++) {
     var elem = document.createElement('img');
     elem.className = 'mover';
