@@ -26,6 +26,7 @@ For the 60fps portion of the pizza project, I took the following steps:
 9) (Third submission) Hardcoded all the 5 possible phase values so i didn't have to call math.sin n times inside a loop
 10) (Third submission) Changed the movement of the pizzas from using style.left to using css translateX
 11) Added the backface visibility hack to the css for the movers
+12) Changed the row and column counting code from using screen width and height to using window width and height
 	
 For the pizza resizing portion of the project, I simply moved the call to determineDx() and the calculation of newWidth to
 outside the loop since the new width is the same for all pizzas given the same slider value. This brought down the execution time

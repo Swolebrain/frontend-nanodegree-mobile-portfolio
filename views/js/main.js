@@ -553,10 +553,9 @@ function generateSlidingPizzas() {
   //and dom element creation doesnt have to happen on window resize
   var s = 256;
   var cols = Math.max(Math.floor(window.innerWidth/s), 4);
-  //rows has 1 added to it just to be safe
+  //minimum of 4 columns just to be safe
   var rows = Math.floor(window.innerHeight/s); 
   //this will only happen on phones:
-  if (cols >= rows) rows = rows*2 +2;
   var movingPizzasContainer = document.getElementById("movingPizzas1");
   
   for (var i = 0; i < rows*cols; i++) {
