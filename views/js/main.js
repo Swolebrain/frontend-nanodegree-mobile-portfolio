@@ -18,8 +18,7 @@ cameron *at* udacity *dot* com
 
 // As you may have realized, this website randomly generates pizzas.
 // Here are arrays of all possible pizza ingredients.
-/*var pizzaCols = -1;
-var numPizzas = -1;*/
+var allMovers = [];
 var pizzaIngredients = {};
 pizzaIngredients.meats = [
   "Pepperoni",
@@ -463,7 +462,7 @@ var resizePizzas = function(size) {
     for (var i = 0; i < allPizzas.length; i++) {
       //var dx = determineDx(document.querySelectorAll(".randomPizzaContainer")[i], size);
       //var newwidth = (document.querySelectorAll(".randomPizzaContainer")[i].offsetWidth + dx) + 'px';
-      document.querySelectorAll(".randomPizzaContainer")[i].style.width = newwidth;
+      allPizzas[i].style.width = newwidth;
     }
   }
 
@@ -511,12 +510,24 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
-
-  var items = document.getElementsByClassName('mover');
-  var phase0 = document.body.scrollTop / 1250;
-  for (var i = 0; i < items.length; i++) {
-	var phase = Math.sin(phase0 + (i % 5));
-    items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
+  
+  var dbst = document.body.scrollTop;
+  var phase0 = Math.sin(dbst / 1250);  
+  var phase1 = Math.sin(dbst / 1250 + 1);  
+  var phase2 = Math.sin(dbst / 1250 + 2);  
+  var phase3 = Math.sin(dbst / 1250 + 3);  
+  var phase4 = Math.sin(dbst / 1250 + 4);
+  for (var i = 0; i < allMovers.length; i++) {
+	var phase;
+	switch ( i % 5 ){
+		case 0: phase = phase0; break;
+		case 1: phase = phase1; break;
+		case 2: phase = phase2; break;
+		case 3: phase = phase3; break;
+		case 4: phase = phase4; break;
+	}
+    //allMovers[i].style.left = allMovers[i].basicLeft + 100 * phase + 'px';
+	allMovers[i].style.transform = 'translateX('+ 100 * phase +'px)';
   }
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
@@ -531,6 +542,7 @@ function updatePositions() {
 
 // runs updatePositions on scroll
 window.addEventListener('scroll', updatePositions);
+//window.addEventListener('resize', generateSlidingPizzas);
 
 // Generates the sliding pizzas when the page loads.
 document.addEventListener('DOMContentLoaded', generateSlidingPizzas);
@@ -540,12 +552,13 @@ function generateSlidingPizzas() {
   //Using width of screen rather than window so that expensive pizza recomputation 
   //and dom element creation doesnt have to happen on window resize
   var s = 256;
-  var cols = Math.max(Math.floor(window.innerWidth/s)+1, 4);
+  var cols = Math.max(Math.floor(window.innerWidth/s), 4);
   //rows has 1 added to it just to be safe
-  var rows = Math.floor(window.innerHeight/s) + 1; 
+  var rows = Math.floor(window.innerHeight/s); 
   //this will only happen on phones:
-  if (cols >= rows) rows = rows*2 +1;
+  if (cols >= rows) rows = rows*2 +2;
   var movingPizzasContainer = document.getElementById("movingPizzas1");
+  
   for (var i = 0; i < rows*cols; i++) {
     var elem = document.createElement('img');
     elem.className = 'mover';
@@ -558,6 +571,7 @@ function generateSlidingPizzas() {
 	var phase = Math.sin( i % 5); //don't need the document.scrolltop bit since it's zero right now upon domcontentloaded
     elem.style.left = elem.basicLeft + 100 * phase + 'px';
     movingPizzasContainer.appendChild(elem);
+	allMovers.push(elem);
   }
   //removed this function call so i don't have to traverse the mover elements twice
   //updatePositions();

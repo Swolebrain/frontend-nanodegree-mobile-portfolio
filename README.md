@@ -22,12 +22,16 @@ For the 60fps portion of the pizza project, I took the following steps:
 	the n elements rather than two passes)
 7) (Second submission) Found out that the number of mover pizza columns wasn't being computed correctly on mobile and inserted a 
 	quick hack to fix it (made it so number of columns couldn't be lower than 4)
+8) (Third submission) Added global variable to keep track of mover pizza elements so I didn't need to access the DOM for every scroll
+9) (Third submission) Hardcoded all the 5 possible phase values so i didn't have to call math.sin n times inside a loop
+10) (Third submission) Changed the movement of the pizzas from using style.left to using css translateX
+11) Added the backface visibility hack to the css for the movers
 	
 For the pizza resizing portion of the project, I simply moved the call to determineDx() and the calculation of newWidth to
 outside the loop since the new width is the same for all pizzas given the same slider value. This brought down the execution time
 to 2ms and change. Steps taken in additional submissions:
 1) (Second submission) Changed queryselectorall calls to getElementsByClassName to improve performance
-2) (Second submission) Reduced number of dom traversals in changePizzaSizes function
+2) (Second submission) Reduced number of dom traversals in changePizzaSizes function by assigning document.getElementsByClassName("randomPizzaContainer") to a variable
 
 
 HOW TO RUN
