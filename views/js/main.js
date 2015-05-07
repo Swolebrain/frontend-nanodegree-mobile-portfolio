@@ -19,6 +19,7 @@ cameron *at* udacity *dot* com
 // As you may have realized, this website randomly generates pizzas.
 // Here are arrays of all possible pizza ingredients.
 var allMovers = [];
+var moverCols = 1;
 var pizzaIngredients = {};
 pizzaIngredients.meats = [
   "Pepperoni",
@@ -515,14 +516,14 @@ function updatePositions() {
   window.performance.mark("mark_start_frame");
   
   var dbst = document.body.scrollTop;
-  var phases = [Math.sin(dbst / 1250),
-              Math.sin(dbst / 1250 + 1), 
-              Math.sin(dbst / 1250 + 2),
-              Math.sin(dbst / 1250 + 3),
-              Math.sin(dbst / 1250 + 4)];
+  var phases = [];
+  var numPhases = Math.round(moverCols*1.6666);
+  for (var j = 0; j < numPhases; j++)
+	  phases.push(Math.sin(dbst / 1250 + j));
+              
   for (var i = 0; i < allMovers.length; i++) {
     //allMovers[i].style.left = allMovers[i].basicLeft + 100 * phase + 'px';
-	allMovers[i].style.transform = 'translateX('+ 100 * phases[i%5] +'px)';
+	allMovers[i].style.transform = 'translateX('+ 100 * phases[i%numPhases] +'px)';
   }
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
@@ -547,24 +548,22 @@ function generateSlidingPizzas() {
   //Using width of screen rather than window so that expensive pizza recomputation 
   //and dom element creation doesnt have to happen on window resize
   var s = 256;
-  var colsTentative = Math.floor(window.innerWidth/s);
-  //making sure cols is never less than 4 nor equal to 5 because when there's 5
-  //cols this matches the number of phases for the left shifting of pizzas and then
-  //all the pizzas in a given column will line up
-  var cols = colsTentative == 5 ? 6 : (colsTentative < 4 ? 4: colsTentative);
+  //moverCols is a global variable so we can use it when computing phases
+  //for the mover elements
+  moverCols = Math.max(Math.floor(window.innerWidth/s), 4);
   //minimum of 4 columns just to be safe
-  var rows = Math.floor(window.innerHeight/s); 
-  //this will only happen on phones:
+  var rows = Math.floor(window.screen.height/s); 
+  
   var movingPizzasContainer = document.getElementById("movingPizzas1");
   
-  for (var i = 0; i < rows*cols; i++) {
+  for (var i = 0; i < rows*moverCols; i++) {
     var elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
     elem.style.height = "100px";
     elem.style.width = "73.333px";
-    elem.basicLeft = (i % cols) * s;
-    elem.style.top = (Math.floor(i / cols) * s) + 'px';
+    elem.basicLeft = (i % moverCols) * s;
+    elem.style.top = (Math.floor(i / moverCols) * s) + 'px';
 	
 	var phase = Math.sin( i % 5); //don't need the document.scrolltop bit since it's zero right now upon domcontentloaded
     elem.style.left = elem.basicLeft + 100 * phase + 'px';

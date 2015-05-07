@@ -1,10 +1,10 @@
-EXTRA IMPORTANT NOTE
+LATEST NOTES
 ===========================================================
-Please make sure the pagespeed insights are run from my hosted version:
-www.swolebrain.com/mobile_portfolio
+Figured out that in your particular display the number of computed columns was matching my number of phases (i = 5) so that's why the movements of all pizzas in the columns were lining up. Should be fixed now, my number of phases now depends on window width as well. Thanks for the video, it was instrumental in coming up with the fix; i wouldn't have known what the symptom was otherwise.
 
-This page gets pagespeed score of 99 but it will not pass if you run pagespeed on a copy of my project because
-it will have no server side optimizations
+Please make sure you use my hosted website (www.swolebrain.com/mobile_portfolio) for the pagespeed insights test. My web server is running apache 2.2 with mod_pagespeed configured so it minifies and embeds css and js files automatically so long as they are within certain length limits. I went ahead and inlined my css for the index.html file anyway because you kept asking me to but this was not really necessary because my pagespeed score is at 99 and has been so ever since my first submission: http://imgur.com/PNBzxNp.
+
+Again, please use my hosted site rather than running pagespeed on a copy of my github repo since my hosted site is the one that has the pagespeed optimizations. http://www.swolebrain.com/mobile_portfolio/
 
 NOTES
 ===========================================================
