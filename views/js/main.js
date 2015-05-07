@@ -454,7 +454,10 @@ var resizePizzas = function(size) {
 	//grabbing and holding the value of the collection of dom elements so i don't have to traverse dom tree more times
 	var allPizzas = document.getElementsByClassName("randomPizzaContainer");
 	//just error-proofing the function
-	if (allPizzas.length <= 0) return;
+	if (allPizzas.length <= 0){
+      console.log("changePizzaSizes has something weird going on");
+      return;
+    }
 	//moved the newwidth computation out here since there's no need to call those convoluted functions more 
 	//than once - their output is the same regardless of which actual dom element the new size is being applied to
 	var dx = determineDx(allPizzas[0], size);
@@ -512,22 +515,14 @@ function updatePositions() {
   window.performance.mark("mark_start_frame");
   
   var dbst = document.body.scrollTop;
-  var phase0 = Math.sin(dbst / 1250);  
-  var phase1 = Math.sin(dbst / 1250 + 1);  
-  var phase2 = Math.sin(dbst / 1250 + 2);  
-  var phase3 = Math.sin(dbst / 1250 + 3);  
-  var phase4 = Math.sin(dbst / 1250 + 4);
+  var phases = [Math.sin(dbst / 1250),
+              Math.sin(dbst / 1250 + 1), 
+              Math.sin(dbst / 1250 + 2),
+              Math.sin(dbst / 1250 + 3),
+              Math.sin(dbst / 1250 + 4)];
   for (var i = 0; i < allMovers.length; i++) {
-	var phase;
-	switch ( i % 5 ){
-		case 0: phase = phase0; break;
-		case 1: phase = phase1; break;
-		case 2: phase = phase2; break;
-		case 3: phase = phase3; break;
-		case 4: phase = phase4; break;
-	}
     //allMovers[i].style.left = allMovers[i].basicLeft + 100 * phase + 'px';
-	allMovers[i].style.transform = 'translateX('+ 100 * phase +'px)';
+	allMovers[i].style.transform = 'translateX('+ 100 * phases[i%5] +'px)';
   }
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
@@ -552,7 +547,11 @@ function generateSlidingPizzas() {
   //Using width of screen rather than window so that expensive pizza recomputation 
   //and dom element creation doesnt have to happen on window resize
   var s = 256;
-  var cols = Math.max(Math.floor(window.innerWidth/s), 4);
+  var colsTentative = Math.floor(window.innerWidth/s);
+  //making sure cols is never less than 4 nor equal to 5 because when there's 5
+  //cols this matches the number of phases for the left shifting of pizzas and then
+  //all the pizzas in a given column will line up
+  var cols = colsTentative == 5 ? 6 : (colsTentative < 4 ? 4: colsTentative);
   //minimum of 4 columns just to be safe
   var rows = Math.floor(window.innerHeight/s); 
   //this will only happen on phones:
