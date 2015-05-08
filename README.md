@@ -1,10 +1,6 @@
 LATEST NOTES
 ===========================================================
-Figured out that in your particular display the number of computed columns was matching my number of phases (i = 5) so that's why the movements of all pizzas in the columns were lining up. Should be fixed now, my number of phases now depends on window width as well. Thanks for the video, it was instrumental in coming up with the fix; i wouldn't have known what the symptom was otherwise.
-
-Please make sure you use my hosted website (www.swolebrain.com/mobile_portfolio) for the pagespeed insights test. My web server is running apache 2.2 with mod_pagespeed configured so it minifies and embeds css and js files automatically so long as they are within certain length limits. I went ahead and inlined my css for the index.html file anyway because you kept asking me to but this was not really necessary because my pagespeed score is at 99 and has been so ever since my first submission: http://imgur.com/PNBzxNp.
-
-Again, please use my hosted site rather than running pagespeed on a copy of my github repo since my hosted site is the one that has the pagespeed optimizations. http://www.swolebrain.com/mobile_portfolio/
+Please make sure you use my hosted website (www.swolebrain.com/mobile_portfolio) for the pagespeed insights test. My web server is running apache 2.2 with mod_pagespeed configured so it minifies and embeds css and js files automatically so long as they are within certain file size limits. 
 
 NOTES
 ===========================================================
@@ -35,7 +31,10 @@ For the 60fps portion of the pizza project, I took the following steps:
 10) (Third submission) Changed the movement of the pizzas from using style.left to using css translateX <br>
 11) (Third submission) Added the backface visibility hack to the css for the movers <br>
 12) (Third submission) Changed the row and column counting code from using screen width and height to using window width and height <br>
-13) (Fourth submission) Fixed bug where all pizzas in a given column move in sync if the computed number of columns is 5.
+13) (Fourth submission) Fixed bug where all pizzas in a given column move in sync if the computed number of columns is 5. Figured out that in
+certain displays the number of computed columns was matching my number of phases (i = 5) so that's why the movements of all pizzas in the
+columns were lining up. Should be fixed now, my number of phases now depends on window width as well. The video from that reviewer was instrumental
+in coming up with the fix; I wouldn't have known what the symptom was otherwise.
 
 	
 For the pizza resizing portion of the project, I simply moved the call to determineDx() and the calculation of newWidth to
