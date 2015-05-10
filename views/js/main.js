@@ -510,19 +510,30 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 // The following code for sliding background pizzas was pulled from Ilya's demo found at:
 // https://www.igvita.com/slides/2012/devtools-tips-and-tricks/jank-demo.html
 
-// Moves the sliding background pizzas based on scroll position
+/*  Moves the sliding background pizzas based on scroll position
+    The numPhases variable simply makes sure that the total number of different sin computations
+    does not match the number of columns computed for this particular display. So if the number of 
+    columns computed is 5, for instance, then numPhases will be 8 and there will be eight different
+    translateX values for the mover elements. This was done to correct a bug where the number of phases in the
+	original code was constant (always 5) and if it happened that in a given display five pizza columns 
+	were computed, then all the pizzas in a column would move in a synchronized way. Since the phase values
+	involve a somewhat expensive sin computation, they are stored in an array (phases) and computed 
+	only once per update.
+  */
 function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
   
   var dbst = document.body.scrollTop;
-  var phases = [];
+  //numPhases can never be less than 7 since moverCols can't be less than 4
   var numPhases = Math.round(moverCols*1.6666);
+  //array to hold computed phase values 
+  var phases = [];
   for (var j = 0; j < numPhases; j++)
 	  phases.push(Math.sin(dbst / 1250 + j));
-              
+  //now all phase values have been computed and they will be used to translate the mover elements
   for (var i = 0; i < allMovers.length; i++) {
-    //allMovers[i].style.left = allMovers[i].basicLeft + 100 * phase + 'px';
+	//changed the original css code style.left to transform:translateX(numpixels)
 	allMovers[i].style.transform = 'translateX('+ 100 * phases[i%numPhases] +'px)';
   }
 
@@ -544,14 +555,15 @@ window.addEventListener('scroll', updatePositions);
 document.addEventListener('DOMContentLoaded', generateSlidingPizzas);
 
 function generateSlidingPizzas() {
-  //computing number of pizza rows and columns based on width of screen
+  //computing number of pizza rows and columns based on width of screenss
   //Using width of screen rather than window so that expensive pizza recomputation 
   //and dom element creation doesnt have to happen on window resize
   var s = 256;
   //moverCols is a global variable so we can use it when computing phases
-  //for the mover elements
-  moverCols = Math.max(Math.floor(window.innerWidth/s), 4);
+  //for the mover elements within updatePositions()
   //minimum of 4 columns just to be safe
+  moverCols = Math.max(Math.ceil(window.screen.width/s), 4);
+  
   var rows = Math.floor(window.screen.height/s); 
   
   var movingPizzasContainer = document.getElementById("movingPizzas1");
@@ -559,7 +571,8 @@ function generateSlidingPizzas() {
   for (var i = 0; i < rows*moverCols; i++) {
     var elem = document.createElement('img');
     elem.className = 'mover';
-    elem.src = "images/pizza.png";
+	//made a smaller pizza image for the background since those are small:
+    elem.src = "images/pizza-sm.png";
     elem.style.height = "100px";
     elem.style.width = "73.333px";
     elem.basicLeft = (i % moverCols) * s;
