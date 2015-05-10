@@ -2,6 +2,10 @@ LATEST NOTES
 ===========================================================
 Re-downloaded the original pizza image to get rid of blurriness. Added a pizza-sm image that is much more compressed and is used for the mover elements.
 
+Kept track of randomPizzaContainers in a global variable called allPizzas.
+
+Made sure that .length attributes of arrays werent accessed in the end condition test of loops and that counter variables were compared against static variables instead.
+
 Please make sure you use my hosted website (www.swolebrain.com/mobile_portfolio) for the pagespeed insights test. My web server is running apache 2.2 with mod_pagespeed configured so it minifies, concatenates and embeds css files automatically so long as they are within certain length limits. I have pagespeed score of 99.
 
 SEQUENTIAL NOTES

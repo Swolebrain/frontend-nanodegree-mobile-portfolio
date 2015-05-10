@@ -449,11 +449,14 @@ var resizePizzas = function(size) {
 
     return dx;
   }
-
+  
+  var allPizzas;
   // Iterates through pizza elements on the page and changes their widths
   function changePizzaSizes(size) {
 	//grabbing and holding the value of the collection of dom elements so i don't have to traverse dom tree more times
-	var allPizzas = document.getElementsByClassName("randomPizzaContainer");
+	if (allPizzas.length === 0) 
+		allPizzas = document.getElementsByClassName("randomPizzaContainer");
+	
 	//just error-proofing the function
 	if (allPizzas.length <= 0){
       console.log("changePizzaSizes has something weird going on");
@@ -463,7 +466,9 @@ var resizePizzas = function(size) {
 	//than once - their output is the same regardless of which actual dom element the new size is being applied to
 	var dx = determineDx(allPizzas[0], size);
     var newwidth = (allPizzas[0].offsetWidth + dx) + 'px';
-    for (var i = 0; i < allPizzas.length; i++) {
+	//caching length of array
+	var allPizzasLength = allPizzas.length;
+    for (var i = 0; i < allPizzasLength; i++) {
       //var dx = determineDx(document.querySelectorAll(".randomPizzaContainer")[i], size);
       //var newwidth = (document.querySelectorAll(".randomPizzaContainer")[i].offsetWidth + dx) + 'px';
       allPizzas[i].style.width = newwidth;
@@ -524,15 +529,16 @@ function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
   
-  var dbst = document.body.scrollTop;
+  var dbst = document.body.scrollTop/1250;
   //numPhases can never be less than 7 since moverCols can't be less than 4
   var numPhases = Math.round(moverCols*1.6666);
   //array to hold computed phase values 
   var phases = [];
   for (var j = 0; j < numPhases; j++)
-	  phases.push(Math.sin(dbst / 1250 + j));
+	  phases.push(Math.sin(dbst + j));
   //now all phase values have been computed and they will be used to translate the mover elements
-  for (var i = 0; i < allMovers.length; i++) {
+  var numMovers = allMovers.length;
+  for (var i = 0; i < numMovers; i++) {
 	//changed the original css code style.left to transform:translateX(numpixels)
 	allMovers[i].style.transform = 'translateX('+ 100 * phases[i%numPhases] +'px)';
   }
@@ -567,8 +573,8 @@ function generateSlidingPizzas() {
   var rows = Math.floor(window.screen.height/s); 
   
   var movingPizzasContainer = document.getElementById("movingPizzas1");
-  
-  for (var i = 0; i < rows*moverCols; i++) {
+  var numCells = rows*moverCols;
+  for (var i = 0; i < numCells; i++) {
     var elem = document.createElement('img');
     elem.className = 'mover';
 	//made a smaller pizza image for the background since those are small:
